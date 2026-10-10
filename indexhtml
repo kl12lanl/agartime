@@ -1,0 +1,49 @@
+import turtle
+import random
+
+# Настройка экрана
+screen = turtle.Screen()
+screen.title("Agar.io Demo")
+screen.bgcolor("black")
+screen.setup(width=600, height=600)
+screen.tracer(0)
+
+# Игрок
+player = turtle.Turtle()
+player.shape("circle")
+player.color("green")
+player.penup()
+player.goto(0, 0)
+player.shapesize(stretch_wid=1, stretch_len=1)
+
+# Еда
+foods = []
+for _ in range(30):
+    f = turtle.Turtle()
+    f.shape("circle")
+    f.color(random.choice(["red", "blue", "yellow", "orange", "purple"]))
+    f.penup()
+    f.goto(random.randint(-280, 280), random.randint(-280, 280))
+    f.shapesize(stretch_wid=0.4, stretch_len=0.4)
+    foods.append(f)
+
+# Управление
+def move():
+    player.setheading(player.towards(turtle.MouseEvent.x if hasattr(turtle, 'MouseEvent') else 0, 0))
+
+screen.listen()
+# Движение за курсором мыши
+def go_to_mouse(x, y):
+    player.setheading(player.towards(x, y))
+    player.forward(10)
+    
+    # Проверка столкновения с едой
+    global player_size
+    for f in foods:
+        if player.distance(f) < 15:
+            f.goto(random.randint(-280, 280), random.randint(-280, 280))
+
+screen.onscreenclick(go_to_mouse)
+
+while True:
+    screen.update()
